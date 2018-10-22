@@ -180,7 +180,7 @@ printf("\n\nThe Cipher text is:\n ");
 for(i=1;i<=length;++i)
 printf("%c ",cipher_text[i]);
 }
-*/
+/*
 Output:
 [root@localhost security lab]# gcc playfair.c
 [root@localhost security lab]# ./a.out
