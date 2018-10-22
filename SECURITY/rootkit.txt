@@ -1,0 +1,35 @@
+Algorithm:
+1. Download rkhunter tool from https://rootkit.nl/projects/rootkit_hunter.html
+    or using wget from the command line-  
+    http://downloads.sourceforge.net/project/rkhunter/rkhunter/1.4.2/rkhunter-1.4.2.tar.gz
+2. Unzip the file and install rkhunter as a root user.
+3. Run the RKH updater to get the latest updates to the database
+4. Setting cron job and email alerts
+5. Set execute permission on the file rkhunter.sh
+6. Scan the entire file system for rootkits.
+Output:
+ [root@localhost rkhunter-1.4.2]#wget http://downloads.sourceforge.net/project/
+rkhunter/rkhunter/1.4.2/rkhunter-1.4.2.tar.gz
+[root@localhost rkhunter-1.4.2]# gunzip rkhunter-1.4.2.tar.gz
+[root@localhost rkhunter-1.4.2]# tar xvf rkhunter-1.4.2.tar
+[root@localhost rkhunter-1.4.2]# cd rkhunter-1.4.2/
+[root@localhost rkhunter-1.4.2]#  ./installer.sh --layout default --install
+[root@localhost rkhunter-1.4.2]#  /usr/local/bin/rkhunter --update
+[root@localhost rkhunter-1.4.2]#  /usr/local/bin/rkhunter --propupd
+  [root@localhost rkhunter-1.4.2]#  vi /etc/cron.daily/rkhunter.sh
+  [root@localhost rkhunter-1.4.2]#  chmod 755 /etc/cron.daily/rkhunter.sh
+  [root@localhost rkhunter-1.4.2]#  rkhunter --check
+System checks summary
+=====================
+File properties checks...
+    Files checked: 136
+    Suspect files: 0
+Rootkit checks...
+    Rootkits checked : 383
+    Possible rootkits: 0
+Applications checks...
+    All checks skipped
+The system checks took: 2 minutes and 57 seconds
+All results have been written to the log file: /var/log/rkhunter/rkhunter.log
+One or more warnings have been found while checking the system.
+Please check the log file (/var/log/rkhunter/rkhunter.log)
