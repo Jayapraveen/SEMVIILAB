@@ -1,0 +1,1 @@
+vi wcinput	give some inputstart-all.shjpshdfs dfs -mkdir /wcindirhdfs dfs -put wcinput /wcindirhadoop jar /usr/local/hadoop/hadoop-2.8.4/share/hadoop/mapreduce/hadoop-mapreduce-examples-2.8.4.jar wordcount /wcindir /wcoutputcheck in localhost:50070
