@@ -2,47 +2,70 @@
 #include<string.h>
 void main()
 {
- int i,j,k=0,l=0,m=0;
- char s[20],a[10],b[10];
+ int i,j,k=0,l=0,m=0,n,count=0;
+ char str[20],s[20],a[10],b[10];
 
- printf("enter a string:");
- scanf("%s",s);
- for(i=0;i<strlen(s);i++)
+ printf("PLAIN TEXT :  ");
+ scanf("%[^\n]s",str);   //it sets the delimiter for the scanned string as \n
+ n=strlen(str);
+ //Whitespace removal from string
+ for (i = 0; i<n; i++)
+        if (str[i] != ' ')
+            s[count++] = str[i];
+ //Transposition
+ n=strlen(s);
+ for(i=0;i<n;i++)
  {
-     if(i%2==0)    //even position
-    {
-         a[k]=s[i];
-         k++;
-     }
-    else    //odd position
-    {
-         b[l]=s[i];
-          l++;
-     }
- }
+    
+if(i%2==0)
+  
+{
+   
+a[k]=s[i];
+   
+k++;
+  
+}
+  
+else
+  
+{
+   
+b[l]=s[i];
+   
+l++;
+  
+}
+  }
+ 
+ //Display section
  for(i=0;i<k;i++)
  {
-       printf("%c ",a[i]);
-       s[m]=a[i];
-       m++;
+  
+printf("%c ",a[i]);     //Row 1 print
+  
+s[m]=a[i];
+  m++;
  }
  printf("\n");
  for(i=0;i<l;i++)
  {
-      printf(" %c",b[i]);
-      s[m]=b[i];
-      m++;
+  
+printf(" %c",b[i]);    //Row 2 print
+  
+s[m]=b[i];
+  m++;
  }
- printf("\n\ncipher text is %s",s);
+ printf("\n\nCIPHER TEXT :  %s",s);
  getchar();
 }
 /*
 Output:
 [root@localhost security lab]# gcc railfence.c
 [root@localhost security lab]# ./a.out
-enter a string:shootdowntheaircraft
-s o t o n h a r r f
- h o d w t e i c a t
-cipher text is sotonharrfhodwteicat
+PLAIN TEXT :  INDIA IS MY COUNTRY
+I D A S Y O N R
+ N I I M C U T Y
+CIPHER TEXT :  IDASYONRNIIMCUTY
 [root@localhost security lab]# 
 */

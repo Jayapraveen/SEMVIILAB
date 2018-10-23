@@ -1,227 +1,93 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<math.h>
-#include<string.h>
-long int p,q,n,t,flag,e[100],d[100],temp[100],j,m[100],en[100],i;
-char msg[100];
-int prime(long int);
-void ce();
-long int cd(long int);
-void encrypt();
-void decrypt();
-
-void main()
+#include <stdio.h>
+#include <math.h>
+int power(int,unsigned int,int);
+int gcd(int,int);
+int multiplicativeInverse(int,int,int);
+int main()
 {
- 
-printf("\nENTER FIRST PRIME NUMBER\n");
- 
-scanf("%d",&p);
- 
-flag=prime(p);
- 
-if(flag==0) {
- 
-printf("\nWRONG INPUT\n");
- 
-getchar();
- 
-exit(1);
-
-}
- 
-printf("\nENTER ANOTHER PRIME NUMBER\n");
- 
-scanf("%d",&q);
- 
-flag=prime(q);
-
-if(flag==0||p==q) {
- 
-printf("\nWRONG INPUT\n");
- 
-getchar();
- 
-exit(1);
- 
-}
- 
-printf("\nENTER MESSAGE\n");
- 
-fflush(stdin);
- 
-scanf("%s",msg);
- 
-for (i=0;msg[i]!=NULL;i++)
- m[i]=msg[i];
- 
-n=p*q;
- 
-t=(p-1)*(q-1);
- 
-ce();
- 
-printf("\nPOSSIBLE VALUES OF e AND d ARE\n");
- 
-for (i=0;i<j-1;i++)
- 
-printf("\n%ld\t%ld",e[i],d[i]);
- 
-encrypt();
- 
-decrypt();
- 
-getchar();
- }
- int prime(long int pr) {
- 
-int i;
- 
-j=sqrt(pr);
- 
-for (i=2;i<=j;i++) {
- 
-if(pr%i==0)
- 
-    return 0;
- 
-}
- 
+  int p,q,n,e,d,phi,M,C;
+  printf("\nEnter two prime numbers p and q that are not equal : ");
+  scanf("%d %d",&p,&q);
+  n = p * q;
+  phi = (p - 1)*(q - 1);
+  printf("Phi(%d) = %d",n,phi);
+  printf("\nEnter the integer e : ");
+  scanf("%d",&e);
+  if(e >= 1 && e < phi)
+  {
+   
+if(gcd(phi,e)!=1)
+{
+printf("\nChoose proper value for e !!!\n");
+  
 return 1;
- }
-
-void ce() {
-
-int k=0;
- 
-for (i=2;i<t;i++) {
- 
-if(t%i==0)
- 
-    continue;
- 
-flag=prime(i);
- 
-if(flag==1&&i!=p&&i!=q) {
- 
-e[k]=i;
- 
-flag=cd(e[k]);
- 
-if(flag>0) {
- 
-d[k]=flag;
- 
-k++;
- 
 }
+  }
+  //Key Generation
+  d = multiplicativeInverse(e,phi,n);
  
-if(k==99)
- 
-        break;
- 
+  printf("\nPublic Key PU = {%d,%d}",e,n);
+  printf("\nPrivate Key PR = {%d,%d}",d,n);
+  //Encryption
+  printf("\nMessage M = ");
+  scanf("%d",&M);
+  C = power(M,e,n);
+  printf("\nCiphertext C = %d \n",C);
+  //Decryption
+  M = power(C,d,n);
+  printf("\nDecrypted Message M = %d \n",M);
+  return 0;
 }
- 
+int power(int x, unsigned int y, int p)
+{
+    int res = 1;      // Initialize result
+    x = x % p;  // Update x if it is more than or equal to p
+    while (y > 0)
+    {
+        // If y is odd, multiply x with result
+        if (y & 1)
+            res = (res*x) % p;
+        // y must be even now
+        y = y>>1;     // y = y/2
+        x = (x*x) % p;
+    }
+    return res;
 }
- }
-
-long int cd(long int x) {
- 
-long int k=1;
- while(1) {
- 
-k=k+t;
- 
-if(k%x==0)
- 
-    return(k/x);
- 
+int gcd ( int a, int b )
+{
+  int c;
+  while ( a != 0 )
+  {
+     c = a;
+a = b % a; 
+b = c;
+  }
+  return b;
 }
- }
-
-void encrypt() {
- 
-long int pt,ct,key=e[0],k,len;
- 
-i=0;
- 
-len=strlen(msg);
- while(i!=len) {
-
-pt=m[i];
- 
-pt=pt-96;
- 
-k=1;
- 
-for (j=0;j<key;j++) {
- 
-k=k*pt;
- 
-k=k%n;
- 
-}
- 
-temp[i]=k;
- 
-ct=k+96;
- 
-en[i]=ct;
- 
-i++;
- 
-}
- 
-en[i]=-1;
- 
-printf("\nTHE ENCRYPTED MESSAGE IS\n");
- 
-for (i=0;en[i]!=-1;i++)
-printf("%c",en[i]);
-}
-
-void decrypt() {
-long int pt,ct,key=d[0],k;
-i=0;
-while(en[i]!=-1) {
-ct=temp[i];
-k=1;
-for (j=0;j<key;j++) {
-k=k*ct;
-k=k%n;
-}
-pt=k+96;
-m[i]=pt;
-i++;
-}
-
-m[i]=-1;
-printf("\nTHE DECRYPTED MESSAGE IS\n");
-for (i=0;m[i]!=-1;i++)
-printf("%c",m[i]);
+int multiplicativeInverse(int a, int b, int n)
+{
+int sum,x,y;
+        for(y=0;y<n;y++)
+        {
+                for(x=0;x<n;x++)
+                {
+                        sum=a*x + b*(-y);
+                        if(sum==1)
+                                return x;
+                }
+        }
 }
 /*
 Output:
-[root@localhost security lab]# gcc rsa.c -lm
+[root@localhost security lab]# gcc rsaben.c
 [root@localhost security lab]# ./a.out
-ENTER FIRST PRIME NUMBER
-7
-ENTER ANOTHER PRIME NUMBER
-17
-ENTER MESSAGE
-hello
-POSSIBLE VALUES OF e AND d ARE
-5
-77
-11
-35
-13 37
-19 91
-23 71
-29 53
-31 31
-37 13
-THE ENCRYPTED MESSAGE IS
-cc� �
-THE DECRYPTED MESSAGE IS
-hello[root@localhost security lab]# 
+Enter two prime numbers p and q that are not equal : 17 11
+Phi(187) = 160
+Enter the integer e : 7
+Public Key PU = {7,187}
+Private Key PR = {23,187}
+Message M = 88
+Ciphertext C = 11
+Decrypted Message M = 88
+[root@localhost security lab]# 
 */

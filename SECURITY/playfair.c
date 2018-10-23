@@ -1,207 +1,179 @@
 #include<stdio.h>
-int check(char table[5][5],char k)
-{
-int i,j;
-for(i=0;i<5;++i)
-for(j=0;j<5;++j)
-{
-if(table[i][j]==k)
-return 0;
-}
-return 1;
-}
+#include<string.h>
+void initialize();
+void fillMatrix();
+void fillRemaining(int);
+void displayMatrix();
+void encrypt();
+void searchMatrix(int,int);
+char matrix[5][5],keyword[25],plaintext[25],ciphertext[25],flag[26];
+int row,col,row1,col1,row2,col2;
 void main()
 {
-int i,j,key_len;
-char table[5][5];
-for(i=0;i<5;++i)
-     for(j=0;j<5;++j)
-table[i][j]='0';
-printf("**********Playfair Cipher************\n\n");
-printf("Enter the length of the Key. ");
-scanf("%d",&key_len);
-char key[key_len];
-printf("Enter the Key. ");
-for(i=-1;i<key_len;++i)
-{
-scanf("%c",&key[i]);
-if(key[i]=='j')
-key[i]='i';
+initialize();
+printf("\nEnter Keyword: ");
+scanf("%s",keyword);
+printf("\nEnter Plaintext:");
+scanf("%s",plaintext);
+fillMatrix();
+encrypt();
+displayMatrix();
+printf("\nCiphertext: %s \n",ciphertext);
 }
-int flag;
-int count=0;
-// inserting the key into the table
-for(i=0;i<5;++i)
+void initialize()
 {
-for(j=0;j<5;++j)
+int i,j;
+for(i=0;i<26;i++)
+flag[i]=0;
+for(i=0;i<5;i++)
+for(j=0;j<5;j++)
+matrix[i][j]=0;
+}
+void fillMatrix()
 {
-flag=0;
-while(flag!=1)
+int k=0,i,j,p,m=0,n,val;
+flag[9]=1;  //since J is put in I 
+n=strlen(keyword);
+for(i=0;i<5;i++)
 {
-if(count>key_len)
-goto l1;
-flag=check(table,key[count]);
-++count;
-}// end of while
-table[i][j]=key[(count-1)];
-}// end of inner for
-}// end of outer for
-l1:printf("\n");
-int val=97;
-//inserting other alphabets
-for(i=0;i<5;++i)
+for(j=0;j<5;j++)
 {
-  for(j=0;j<5;++j)
-  {
-if(table[i][j]>=97 && table[i][j]<=123)
-{}
+b:
+if(k<n)
+{
+val=keyword[k]-65;
+ 
+if(flag[val]==0)
+{
+matrix[i][j]=keyword[k];
+flag[val]=1;k++;
+}
 else
 {
-flag=0;
-while(flag!=1)
+k++;
+goto b;
+}
+}
+else
 {
-if('j'==(char)val)
-++val;
-flag=check(table,(char)val);
-++val;
-}// end of while
-table[i][j]=(char)(val-1);
-}//end of else
-  }// end of inner for
-}// end of outer for
-printf("The table is as follows:\n");
-for(i=0;i<5;++i)
+col=j;
+goto c;
+}
+                }
+}
+  
+c:      row=i;
+while(m<26)
 {
-  for(j=0;j<5;++j)
-  {
-printf("%c ",table[i][j]);
-  }
+  
+if(flag[m]==0)
+fillRemaining(m);
+m++;
+        }
+}
+void fillRemaining(int m)
+{
+ 
+if(row<5)
+{
+if(col<5)
+        { matrix[row][col]=m+65;
+}
+else
+{
+col=0;
+row++;
+matrix[row][col]=m+65;
+}
+}
+col++;
+}
+ 
+void encrypt()
+{
+int psize,i=0,j=1;
+psize=strlen(plaintext);
+ 
+if(psize%2!=0)   //Adding filler character X since plaintext is odd in size
+strcat(plaintext,"X");
+while(j<=psize)
+{
+searchMatrix(i,j);
+if(row1==row2)  //same row plaintext elements
+{
+if(plaintext[i]==plaintext[j])    //Adding $ if two plaintext elements refer to
+same character
+{
+ciphertext[i]=matrix[row1][(col1+1)%5];
+ciphertext[j]='$';
+}
+else
+{
+ciphertext[i]= matrix[row1][(col1+1)%5];
+ciphertext[j]= matrix[row2][(col2+1)%5];
+}
+}
+else if(col1==col2)  //same col plaintext elements
+     {
+ciphertext[i]= matrix[(row1+1)%5][col1];
+ciphertext[j]= matrix[(row2+1)%5][col2];
+     }
+     else // different row and different col plaintext elements
+     {
+ciphertext[i]= matrix[row1][col2];
+ciphertext[j]= matrix[row2][col1];
+     }
+i+=2;
+j+=2;printf("\n");
+        }
+}
+void searchMatrix(int i,int j)
+{
+int r,t,foundRow,foundCol;
+for(r=0;r<5;r++)
+{
+for(t=0;t<5;t++)
+{
+if(plaintext[i]==matrix[r][t])
+{
+row1=r;col1=t;
+foundRow=1;
+}
+if(plaintext[j]==matrix[r][t])
+{
+row2=r;col2=t;
+foundCol=1;
+}
+}
+if((foundRow==1)&&(foundCol==1))
+break;
+}
+}
+void displayMatrix()
+{
+ 
+int i,j;
+printf("\n");
+for(i=0;i<5;i++)
+{
+for(j=0;j<5;j++)
+printf("%c ",matrix[i][j]);
 printf("\n");
 }
-int l=0;
-printf("\nEnter the length of plain text.(without spaces) ");
-scanf("%d",&l);
-printf("\nEnter the Plain text. ");
-char p[l];
-for(i=-1;i<l;++i)
-{
-scanf("%c",&p[i]);
 }
-for(i=-1;i<l;++i)
-{
-if(p[i]=='j')
-p[i]='i';
-}
-printf("\nThe replaced text(j with i)");
-for(i=-1;i<l;++i)
-printf("%c ",p[i]);
-count=0;
-for(i=-1;i<l;++i)
-{
-if(p[i]==p[i+1])
-count=count+1;
-}
-printf("\nThe cipher has to enter %d bogus char.It is either 'x' or 'z'\n",count);
-int length=0;
-if((l+count)%2!=0)
-length=(l+count+1);
-else
-length=(l+count);
-printf("\nValue of length is %d.\n",length);
-char p1[length];
-//inserting bogus characters.
-char temp1;
-int count1=0;
-for(i=-1;i<l;++i)
-{
-p1[count1]=p[i];
-if(p[i]==p[i+1])
-{
-count1=count1+1;
-if(p[i]=='x')
-p1[count1]='z';
-else      p1[count1]='x';
-}
-count1=count1+1;
-}
-//checking for length
-char bogus;
-if((l+count)%2!=0)
-{
-if(p1[length-1]=='x')
-p1[length]='z';
-else
-p1[length]='x';
-}
-printf("The final text is:");
-for(i=0;i<=length;++i)
-printf("%c ",p1[i]);
-char cipher_text[length];
-int r1,r2,c1,c2;
-int k1;
-for(k1=1;k1<=length;++k1)
-{
-for(i=0;i<5;++i)
-{
-for(j=0;j<5;++j)
-{
-if(table[i][j]==p1[k1])
-{
-r1=i;
-c1=j;
-}
-else
-if(table[i][j]==p1[k1+1])
-{
-r2=i;
-c2=j;
-}
-}//end of for with j
-}//end of for with i
-(r1==r2)
-{
-cipher_text[k1]=table[r1][(c1+1)%5];
-cipher_text[k1+1]=table[r1][(c2+1)%5];
-}
-else
-if(c1==c2)
-{
-cipher_text[k1]=table[(r1+1)%5][c1];
-cipher_text[k1+1]=table[(r2+1)%5][c1];
-}
-else
-{
-cipher_text[k1]=table[r1][c2];
-cipher_text[k1+1]=table[r2][c1];
-}
-k1=k1+1;
-}//end of for with k1
-printf("\n\nThe Cipher text is:\n ");
-for(i=1;i<=length;++i)
-printf("%c ",cipher_text[i]);
-}
+
 /*
+Output:
 Output:
 [root@localhost security lab]# gcc playfair.c
 [root@localhost security lab]# ./a.out
-**********Playfair Cipher************
-Enter the length of the Key. 8
-Enter the Key. monarchy
-The table is as follows:
-m o n a r
-c h y b d
-e f g i k
-l p q s t
-u v w x z 
-Enter the length length of plain text.(without spaces) 12
-Enter the Plain text. moveforwardx
-The replaced text(j with i)
- m o v e f o r w a r d x
-The cipher has to enter 0 bogus char.It is either 'x' or 'z'
-Value of length is 12.
-The final text is:
- m o v e f o r w a r d x 
-The Cipher text is:
- o n u f p h n z r m b z
-[root@localhost security lab]# 
+Enter Keyword: MONARCHY
+Enter Plaintext:INDIA
+M O N A R
+C H Y B D
+E F G I K
+L P Q S T
+U V W X Z 
+Ciphertext: GABKBA
+Result:
 */

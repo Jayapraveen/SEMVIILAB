@@ -3,6 +3,7 @@ In order to encrypt the file the sender should have a private open key of the pe
 to whom the file is going to be sent. The open key is used by the sender to encrypt the data
 and cannot be used to decrypt it. The receiver can decrypt the file using his private secret
 key and a passphrase.
+
 Algorithm:
 1.  Install GnuPG
 2.  Generate public key and private key
@@ -15,6 +16,7 @@ e.  Enter a secure passphrase to generate the keys finally.
 4.  Import public key of receiver
 5.  Encrypt the data file with the option -r
 6.  Decrypt the encrypted data file at the receiver with option -d
+
 Output:
 [root@localhost rkhunter-1.4.2]# yum install gnupg
 [root@localhost rkhunter-1.4.2]# gpg --gen-key

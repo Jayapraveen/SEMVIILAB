@@ -1,99 +1,86 @@
 #include<stdio.h>
-void main()
+#include<string.h>
+int check(int );
+void calc(int );
+//a[][] denotes encryption key K
+//b[][] denotes K inverse
+unsigned int a[3][3]={{17,17,5},{21,18,21},{2,2,19}};
+unsigned int b[3][3]={{4,9,15},{15,17,6},{24,0,17}};
+unsigned int c[20],d[20];
+int n;
+int main()
 {
-int l,i,j,temp1;
-int k[3][3], p[3][1], c[3][1];
-char ch;
-printf("\nThe cipher has a key of length 9. ie. a 3*3 matrix.\nEnter the 9 character key. ");
-for(i=0;i<3;++i)
-{
-for(j=0;j<3;++j)
-{
-scanf("%c",&ch);
-if(65<=ch && ch<=91)
-k[i][j]=(int)ch%65;
+int i=0,t=0,j,q;
+char msg[20];
+printf("\nEnter plain text\n");
+scanf("%s",msg);
+n=strlen(msg);
+q=check(n);
+if(q==1) return 0;
 else
-k[i][j]=(int)ch%97;
-}
-}
-for(i=0;i<3;++i)
 {
-for(j=0;j<3;++j)
+for(i=0;i<n;i++)
 {
-printf("%d ",k[i][j]);
+	c[i]=msg[i]-65;
+printf("%d ",c[i]);
 }
+while(t<n)
+{
+   calc(t);
+   t=t+3;
+}
+printf("\nEncrypted Cipher Text :");
+for(i=0;i<n;i++)
+printf(" %c",d[i]+65);
+for(i=0;i<3;i++)
+{
+t=0;
+for(j=0;j<3;j++)
+{
+t=t+(d[j]*b[j][i]);
+}
+c[i]=t%26;
+}
+printf("\nDecrypted Cipher Text :");
+for(i=0;i<n;i++)
+printf(" %c",c[i]+65);
 printf("\n");
 }
-printf("\nEnter the length of string to be encoded(without spaces). ");
-scanf("%d",&l);
-temp1=check(l);
-if(temp1>0)
-printf("You have to enter %d bogus characters.",temp1);
-char pi[l+temp1];
-printf("\nEnter the string. ");
-for(i=-1;i<l+temp1;++i)
-{
-scanf("%c",&pi[i]);
-}
-int temp2=l;
-int n=(l+temp1)/3;
-int temp3;
-int flag=0;
-int count;
-printf("\n\nThe encoded cipher is : ");
-while(n>0)
-{
-count=0;
-for(i=flag;i<flag+3;++i)
-{
-if(65<=pi[i] && pi[i]<=91)
-temp3=(int)pi[i]%65;
-else
-temp3=(int)pi[i]%97;
-p[count][0]=temp3;
-count=count+1;
-}
-int k1;
-for(i=0;i<3;++i)
-c[i][0]=0;
-for(i=0;i<3;++i)
-{
-for(j=0;j<1;++j)
-{
-for(k1=0;k1<3;++k1)
-c[i][j]+=k[i][k1]*p[k1][j];
-}
-}
-for(i=0;i<3;++i)
-{
-c[i][0]=c[i][0]%26; 
-printf("%c ",(char)(c[i][0]+65));
-}
-n=n-1;
-flag=flag+3;
-}
-}
-int check(int x)
-{
-  int a,b,c;
-if(x%3==0)
 return 0;
-a=x/3;
-b=3*(a+1);
-c=b-x;
-return c;
+}
+void calc(int k)
+{
+    int i,j,t;
+    for(i=0;i<3;i++)
+    {
+      
+t=0;
+ 
+for(j=0;j<3;j++)
+{
+t=t+(c[j+k]*a[j][i]);
+}
+d[i+k]=t%26;
+    }
+}
+int check(int p)
+{
+  if(n%3!=0)
+  {
+     printf("\nEnter Plaintext in multiples of three \n");
+     return 1;
+  }
+  else return 0;
 }
 /*
 Output:
+[root@localhost security lab]# gcc hillfinal.c
 [root@localhost security lab]# ./a.out
-The cipher has a key of length 9. ie. a 3*3 matrix.
-Enter the 9 character key. backupabc
-1 0 2
-10 20 15
-0 1 2 
-Enter the length of string to be encoded(without spaces). 10
-You have to enter 2 bogus characters.
-Enter the string. retreatnowxx
-The encoded cipher is : D P Q R Q E V K P Q L R
+Enter plain text
+PAYMOREMONEY
+15 0 24 12 14 17 4 12 14 13 4 24
+Encrypted Cipher Text : R R L M W B K A S P D H
+Decrypted Cipher Text : P A Y M O R E M O N E Y
+[root@localhost security lab]# 
 [root@localhost security lab]# 
 */

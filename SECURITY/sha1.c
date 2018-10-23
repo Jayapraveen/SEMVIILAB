@@ -1,9 +1,9 @@
+Program Code:
 #include <stdio.h>
 #include <string.h>
 #include <openssl/sha.h>
 
-int main(int argn, char *argv[])
-{
+int main(int argn, char *argv[]) {
 
     int i = 0;
     unsigned char temp[SHA_DIGEST_LENGTH];

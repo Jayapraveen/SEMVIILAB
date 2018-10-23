@@ -2,6 +2,7 @@ Output:
 [root@localhost security lab]# dnf install honeyd
 [root@localhost security lab]# cd /etc/
 [root@localhost security lab]# vi honeyd.conf
+
 create default
 set default default tcp action block
 set default default udp action block
@@ -14,8 +15,10 @@ add windows tcp port 139 open
 add windows tcp port 445 open
 set windows ethernet "00:00:24:ab:8c:12"
 dhcp windows on eth0
+
 [root@localhost security lab]# honeyd -d -f honeyd.conf
 [root@localhost security lab]# nmap -p 135,139,445,1337 192.168.99.135
+
 Starting Nmap 5.00 ( http://nmap.org ) at 2011-05-06 13:13 EDT
 Interesting ports on someone (172.20.73.77):
 PORT     STATE  SERVICE
