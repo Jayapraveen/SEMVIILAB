@@ -1,4 +1,3 @@
-Program Code:
 //This program uses fast exponentiation function power instead of pow library function
 #include <stdio.h>
 #include <math.h>
